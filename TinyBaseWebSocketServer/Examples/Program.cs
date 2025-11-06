@@ -3,11 +3,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Serilog;
+using Serilog.Events;
 using TinyBaseWebSocketServer.Extensions;
 using TinyBaseWebSocketServer.Models.Configuration;
+using TinyBaseWebSocketServer.Models.Server;
 using TinyBaseWebSocketServer.Services;
 using System.Net.WebSockets;
+using System.Security.Principal;
 using System.Text;
 using System.Text.Json;
 
@@ -15,6 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configure Serilog
 Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
     .WriteTo.Console()
     .CreateLogger();
 
@@ -36,8 +41,7 @@ builder.Services.AddWebSocketServer<ExamplePersister>(
         options.OperationTimeoutSeconds = 30;
         options.MaxConnectionsPerPath = 100;
         options.WebSocketPath = "/ws";
-    },
-    error => Log.Error(error, "WebSocket server error")
+    }
 );
 
 var app = builder.Build();
@@ -46,7 +50,7 @@ var app = builder.Build();
 app.UseWebSockets();
 
 // WebSocket endpoint
-app.Map("/ws", async context =>
+app.Map("/ws", async (HttpContext context) =>
 {
     if (!context.WebSockets.IsWebSocketRequest)
     {
@@ -106,10 +110,11 @@ public class ExamplePersister
 /// <summary>
 /// Default implementation of WebSocketContext for demonstration
 /// </summary>
-public class DefaultWebSocketContext : WebSocketContext
+public class DefaultWebSocketContext : TinyBaseWebSocketServer.Models.Server.WebSocketContext
 {
     private readonly HttpContext _httpContext;
     private readonly WebSocket _webSocket;
+    private readonly IDictionary<string, object> _items = new Dictionary<string, object>();
     
     public DefaultWebSocketContext(HttpContext httpContext, WebSocket webSocket)
     {
@@ -118,9 +123,17 @@ public class DefaultWebSocketContext : WebSocketContext
     }
     
     public override WebSocket WebSocket => _webSocket;
-    public override HttpContext HttpContext => _httpContext;
+    public override Microsoft.AspNetCore.Http.HttpContext HttpContext => _httpContext;
     public override bool IsAuthenticated => true;
     public override bool IsLocal => false;
-    public override string RequestUri => _httpContext.Request.GetDisplayUrl();
-    public override IDictionary<string, object> Items => new Dictionary<string, object>();
+    public override Uri RequestUri => new Uri($"{_httpContext.Request.Scheme}://{_httpContext.Request.Host}{_httpContext.Request.Path}{_httpContext.Request.QueryString}");
+    public override string SecWebSocketVersion => "13";
+    public override string? Origin => _httpContext.Request.Headers["Origin"].ToString();
+    public override string? SecWebSocketKey => _httpContext.Request.Headers["Sec-WebSocket-Key"].ToString();
+    public override IHeaderDictionary Headers => _httpContext.Request.Headers;
+    public override bool IsSecureConnection => _httpContext.Request.IsHttps;
+    public override IList<string> SecWebSocketProtocols => new List<string>();
+    public override IPrincipal? User => _httpContext.User;
+    public override IRequestCookieCollection? CookieCollection => _httpContext.Request.Cookies;
+    public override IDictionary<string, object> Items => _items;
 }

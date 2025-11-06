@@ -1,3 +1,5 @@
+using System.Net.WebSockets;
+
 namespace TinyBaseWebSocketServer.Models.Server;
 
 /// <summary>

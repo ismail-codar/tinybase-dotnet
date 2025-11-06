@@ -1,3 +1,8 @@
+using System.Net.WebSockets;
+using TinyBaseWebSocketServer.Models.Events;
+using TinyBaseWebSocketServer.Services.Management;
+using TinyBaseWebSocketServer.Services.Message;
+
 namespace TinyBaseWebSocketServer.Services.Handlers;
 
 /// <summary>
@@ -213,12 +218,12 @@ public class MessageHandler
     private async Task RouteMessageAsync(string fromClientId, string pathId, MessagePayload messagePayload, string forwardedPayload)
     {
         // Handle different routing scenarios
-        if (messagePayload.IsBroadcast)
+        if (messagePayload.IsBroadcast())
         {
             // Send to all clients except sender
             await BroadcastToPathAsync(fromClientId, pathId, forwardedPayload);
         }
-        else if (messagePayload.IsServerMessage)
+        else if (messagePayload.IsServerMessage())
         {
             // Send to server (buffer for server to consume)
             BufferMessage(pathId, messagePayload.ToClientId, forwardedPayload);

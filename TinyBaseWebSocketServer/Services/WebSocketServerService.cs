@@ -1,3 +1,13 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System.Net.WebSockets;
+using TinyBaseWebSocketServer.Models.Configuration;
+using TinyBaseWebSocketServer.Models.Events;
+using TinyBaseWebSocketServer.Models.Server;
+using TinyBaseWebSocketServer.Services.Handlers;
+using TinyBaseWebSocketServer.Services.Management;
+using TinyBaseWebSocketServer.Services.Message;
+
 namespace TinyBaseWebSocketServer.Services;
 
 /// <summary>
@@ -74,7 +84,7 @@ public class WebSocketServerService<TPersister> : IAsyncDisposable where TPersis
             _webSocketServer = _webSocketFactory.CreateServer(_options.Port);
             
             // Set up connection handling
-            _webSocketServer.ConfigureAwait(false);
+            // _webSocketServer.ConfigureAwait(false);
             
             _logger.LogInformation("WebSocket server started successfully");
             OnServerStarted();
@@ -125,7 +135,7 @@ public class WebSocketServerService<TPersister> : IAsyncDisposable where TPersis
     /// <param name="clientId">The client ID from WebSocket headers</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A task representing the asynchronous operation</returns>
-    public async Task HandleConnectionAsync(WebSocketContext context, string pathId, string clientId, CancellationToken cancellationToken = default)
+    public async Task HandleConnectionAsync(TinyBaseWebSocketServer.Models.Server.WebSocketContext context, string pathId, string clientId, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -312,11 +322,11 @@ public class WebSocketServerService<TPersister> : IAsyncDisposable where TPersis
             var sendFunction = new Func<string, Task>(async payload =>
             {
                 var messagePayload = MessagePayload.Deserialize(payload);
-                if (messagePayload.IsBroadcast)
+                if (messagePayload.IsBroadcast())
                 {
                     await _messageHandler.BroadcastToPathAsync("S", pathId, payload);
                 }
-                else if (messagePayload.IsServerMessage)
+                else if (messagePayload.IsServerMessage())
                 {
                     // Send back to server (self-loop)
                     await _messageHandler.SendToClientAsync("S", pathId, payload);
@@ -346,7 +356,7 @@ public class WebSocketServerService<TPersister> : IAsyncDisposable where TPersis
     }
     
     private async Task HandleConnectionMessagesAsync(
-        WebSocketContext context,
+        TinyBaseWebSocketServer.Models.Server.WebSocketContext context,
         WebSocketConnection connection,
         ServerClient<TPersister> serverClient,
         CancellationToken cancellationToken)
@@ -500,7 +510,7 @@ public class WebSocketFactory : IWebSocketFactory
 /// <summary>
 /// Mock WebSocket server for demonstration purposes
 /// </summary>
-public class MockWebSocketServer : IDisposable
+public class MockWebSocketServer : WebSocketServer
 {
     public int Port { get; }
     
@@ -509,7 +519,7 @@ public class MockWebSocketServer : IDisposable
         Port = port;
     }
     
-    public void Dispose()
+    public override void Dispose()
     {
         // Mock implementation
     }
