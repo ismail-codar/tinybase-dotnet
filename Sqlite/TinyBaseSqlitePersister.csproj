@@ -13,11 +13,11 @@
  </PropertyGroup>
 
  <ItemGroup>
-   <Compile Include="Sqlite/**/*.cs" />
+   <Compile Include="**/*.cs" />
  </ItemGroup>
 
  <ItemGroup>
-   <Content Include="Sqlite/Examples/**">
+   <Content Include="Examples/**">
      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
    </Content>
  </ItemGroup>
