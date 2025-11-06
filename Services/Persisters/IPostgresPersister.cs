@@ -1,3 +1,5 @@
+using TinyBasePostgresPersister.Models.Configuration;
+
 namespace TinyBasePostgresPersister.Services.Persisters;
 
 /// <summary>

@@ -91,8 +91,8 @@ public class Program
     }
 
     private static async Task ExampleSimpleTablePersistence(
-        ServiceProvider serviceProvider, 
-        ILogger logger, 
+        ServiceProvider serviceProvider,
+        Microsoft.Extensions.Logging.ILogger logger,
         IPostgresPersisterFactory persisterFactory)
     {
         logger.LogInformation("=== Example 1: Simple Table Persistence ===");
@@ -135,7 +135,7 @@ public class Program
 
     private static async Task ExampleJsonConfigurationPersistence(
         ServiceProvider serviceProvider,
-        ILogger logger,
+        Microsoft.Extensions.Logging.ILogger logger,
         IPostgresPersisterFactory persisterFactory)
     {
         logger.LogInformation("=== Example 2: JSON Configuration Persistence ===");
@@ -184,7 +184,7 @@ public class Program
 
     private static async Task ExampleMultipleTableManagement(
         ServiceProvider serviceProvider,
-        ILogger logger,
+        Microsoft.Extensions.Logging.ILogger logger,
         IPostgresPersisterFactory persisterFactory)
     {
         logger.LogInformation("=== Example 3: Multiple Table Management ===");

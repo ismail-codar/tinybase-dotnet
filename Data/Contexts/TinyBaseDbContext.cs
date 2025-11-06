@@ -87,14 +87,4 @@ public class TinyBaseDbContext : DbContext
         modelBuilder.Entity<Table>()
             .HasIndex(e => e.IsManaged);
     }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            // Default to SQLite for development if no connection string is configured
-            // In production, this would be configured via dependency injection
-            optionsBuilder.UseSqlite("Data Source=tinybase.db");
-        }
-    }
 }

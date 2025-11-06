@@ -79,12 +79,13 @@ public class Repository<T> : IRepository<T> where T : class
 
     public virtual async Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
     {
-        await Task.FromResult(_dbSet.Remove(entity));
+        await Task.FromResult<object?>(_dbSet.Remove(entity));
     }
 
     public virtual async Task DeleteRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
     {
-        await Task.FromResult(_dbSet.RemoveRange(entities));
+        _dbSet.RemoveRange(entities);
+        await Task.CompletedTask;
     }
 
     public virtual async Task<IEnumerable<T>> FromSqlRawAsync(string sql, params object[] parameters)

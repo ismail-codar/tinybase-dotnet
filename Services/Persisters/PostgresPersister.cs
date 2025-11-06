@@ -25,7 +25,6 @@ public class PostgresPersister : IPostgresPersister
     private readonly string _channelName;
     private readonly string _configHash;
     private readonly bool _isJson;
-    private NpgsqlNotification? _notification;
     private bool _isListening;
     private readonly List<string> _managedTableNames;
     private readonly List<string> _createdFunctionNames = new();
@@ -111,7 +110,7 @@ public class PostgresPersister : IPostgresPersister
             var command = new NpgsqlCommand($"UNLISTEN {_channelName}", _connection);
             await command.ExecuteNonQueryAsync(cancellationToken);
             
-            await _connection.CloseAsync(cancellationToken);
+            await _connection.CloseAsync();
             _isListening = false;
         }
         catch (Exception ex)
@@ -221,7 +220,7 @@ public class PostgresPersister : IPostgresPersister
             END;
             $$ LANGUAGE plpgsql;";
 
-        var command = NpgsqlCommandBuilder.CreateTextCommand(sql, _connection);
+        var command = new NpgsqlCommand(sql, _connection);
         await command.ExecuteNonQueryAsync(cancellationToken);
 
         return functionName;
