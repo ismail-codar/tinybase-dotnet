@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 using TinyBaseSqlitePersister.Configuration;
@@ -44,7 +45,7 @@ public static class ServiceCollectionExtensions
             if (options.EnableSqlLogging)
             {
                 builder.EnableSensitiveDataLogging();
-                builder.LogTo(Console.WriteLine, LogLevel.Information);
+                builder.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information);
             }
         });
 
@@ -99,7 +100,7 @@ public static class ServiceCollectionExtensions
             if (options.EnableSqlLogging)
             {
                 builder.EnableSensitiveDataLogging();
-                builder.LogTo(Console.WriteLine, LogLevel.Information);
+                builder.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information);
             }
         });
 

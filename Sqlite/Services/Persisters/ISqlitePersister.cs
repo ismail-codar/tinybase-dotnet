@@ -22,17 +22,12 @@ public class SqlitePersisterEventArgs : EventArgs
 }
 
 /// <summary>
-/// Configuration for the SQLite persister
+/// Event arguments for database changes
 /// </summary>
-public class SqlitePersisterConfig
+public class SqliteChangeEventArgs
 {
-    public string? StoreTableName { get; set; }
-    public List<string> ManagedTableNames { get; set; } = new();
-    public bool IsJson { get; set; }
-    public int AutoLoadIntervalSeconds { get; set; } = 5;
-    public List<TableConfig> TableConfigs { get; set; } = new();
-    public Action<string, object[]>? OnSqlCommand { get; set; }
-    public Action<Exception>? OnIgnoredError { get; set; }
+    public string? Table { get; set; }
+    public string? Schema { get; set; }
 }
 
 /// <summary>

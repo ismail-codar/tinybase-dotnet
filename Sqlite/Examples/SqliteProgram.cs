@@ -92,7 +92,7 @@ public class SqliteProgram
 
     private static async Task ExampleSimpleTablePersistence(
         ServiceProvider serviceProvider, 
-        ILogger logger, 
+        Microsoft.Extensions.Logging.ILogger logger, 
         ISqlitePersisterFactory persisterFactory)
     {
         logger.LogInformation("=== Example 1: Simple Table Persistence ===");
@@ -135,7 +135,7 @@ public class SqliteProgram
 
     private static async Task ExampleJsonConfigurationPersistence(
         ServiceProvider serviceProvider,
-        ILogger logger,
+        Microsoft.Extensions.Logging.ILogger logger,
         ISqlitePersisterFactory persisterFactory)
     {
         logger.LogInformation("=== Example 2: JSON Configuration Persistence ===");
@@ -185,7 +185,7 @@ public class SqliteProgram
 
     private static async Task ExampleFileBasedDatabase(
         ServiceProvider serviceProvider,
-        ILogger logger,
+        Microsoft.Extensions.Logging.ILogger logger,
         ISqlitePersisterFactory persisterFactory)
     {
         logger.LogInformation("=== Example 3: File-Based Database ===");

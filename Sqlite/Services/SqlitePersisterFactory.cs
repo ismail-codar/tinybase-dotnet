@@ -79,7 +79,7 @@ public class SqlitePersisterFactory : ISqlitePersisterFactory
         var connection = new SqliteConnection(_connectionString);
         
         // Configure callbacks
-        var persisterConfig = new SqlitePersisterConfig
+        var persisterConfig = new TinyBaseSqlitePersister.Models.Configuration.SqlitePersisterConfig
         {
             StoreTableName = config.StoreTableName,
             ManagedTableNames = config.ManagedTableNames,
@@ -127,7 +127,7 @@ public class SqlitePersisterFactory : ISqlitePersisterFactory
         var connection = new SqliteConnection(connectionString);
         
         // Configure callbacks
-        var persisterConfig = new SqlitePersisterConfig
+        var persisterConfig = new TinyBaseSqlitePersister.Models.Configuration.SqlitePersisterConfig
         {
             StoreTableName = config.StoreTableName,
             ManagedTableNames = config.ManagedTableNames,
@@ -147,7 +147,7 @@ public class SqlitePersisterFactory : ISqlitePersisterFactory
         string? configOrTableName, 
         CancellationToken cancellationToken)
     {
-        var config = new SqlitePersisterConfig();
+        var config = new TinyBaseSqlitePersister.Models.Configuration.SqlitePersisterConfig();
 
         if (string.IsNullOrEmpty(configOrTableName))
         {
@@ -161,7 +161,7 @@ public class SqlitePersisterFactory : ISqlitePersisterFactory
             // JSON configuration
             try
             {
-                var jsonConfig = JsonSerializer.Deserialize<SqlitePersisterConfig>(configOrTableName, new JsonSerializerOptions
+                var jsonConfig = JsonSerializer.Deserialize<TinyBaseSqlitePersister.Models.Configuration.SqlitePersisterConfig>(configOrTableName, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });

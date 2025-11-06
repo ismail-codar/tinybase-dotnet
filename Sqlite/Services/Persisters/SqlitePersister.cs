@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using TinyBaseSqlitePersister.Data.Contexts;
@@ -80,8 +81,8 @@ public class SqlitePersister : ISqlitePersister
             // Initialize version info
             _lastVersionInfo = await GetVersionInfoAsync(cancellationToken);
             
-            // Set up change event handler (SQLite change event is limited)
-            _connection.Change += OnSqliteChangeReceived;
+            // Note: SQLite doesn't have built-in change notifications like PostgreSQL
+            // Change events will be detected through polling only
             
             // Start polling timer if interval is set
             if (_autoLoadIntervalSeconds > 0)
@@ -110,10 +111,8 @@ public class SqlitePersister : ISqlitePersister
             _pollingTimer?.Dispose();
             _pollingTimer = null;
             
-            // Remove change event handler
-            _connection.Change -= OnSqliteChangeReceived;
-            
-            await _connection.CloseAsync(cancellationToken);
+            // Note: No change event handler to remove for SQLite
+            _connection.Close();
             _isListening = false;
         }
         catch (Exception ex)
@@ -220,28 +219,7 @@ public class SqlitePersister : ISqlitePersister
         return new SqliteVersionInfo { DataVersion = 0, SchemaVersion = 0, TotalChanges = 0 };
     }
 
-    private void OnSqliteChangeReceived(object? sender, SqliteChangeEventArgs e)
-    {
-        try
-        {
-            var tableName = e.Table ?? "unknown";
-            
-            if (_managedTableNames.Contains(tableName) || _managedTableNames.Count == 0)
-            {
-                var args = new SqlitePersisterEventArgs
-                {
-                    Message = $"Data changed in {tableName}",
-                    EventType = CHANGE_EVENT,
-                    TableName = tableName
-                };
-                DataChanged?.Invoke(this, args);
-            }
-        }
-        catch (Exception ex)
-        {
-            _config.OnIgnoredError?.Invoke(ex);
-        }
-    }
+    
 
     private async Task NotifyDataChanged(CancellationToken cancellationToken = default)
     {

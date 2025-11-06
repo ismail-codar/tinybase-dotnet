@@ -29,6 +29,16 @@ public class SqlitePersisterConfig
     /// Table configuration for tabular mode
     /// </summary>
     public List<TableConfig> TableConfigs { get; set; } = new();
+
+    /// <summary>
+    /// SQL command callback
+    /// </summary>
+    public Action<string, object[]>? OnSqlCommand { get; set; }
+
+    /// <summary>
+    /// Error callback
+    /// </summary>
+    public Action<Exception>? OnIgnoredError { get; set; }
 }
 
 /// <summary>
