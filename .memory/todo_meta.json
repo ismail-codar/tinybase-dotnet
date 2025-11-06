@@ -1,0 +1,62 @@
+{
+  "todos": {
+    "Coordinator": {
+      "1": {
+        "id": "1",
+        "content": "Analyze TypeScript WebSocket Server implementation",
+        "details": "Extract key functionality: WebSocket connection management, path-based multi-tenancy, message routing, server client lifecycle, event listeners, and statistics.",
+        "status": "completed",
+        "priority": "high"
+      },
+      "2": {
+        "id": "2",
+        "content": "Create C# WebSocket Server project structure",
+        "details": "Create project file with ASP.NET Core WebSocket dependencies, establish folder structure following clean architecture patterns (Models, Services, Handlers, Extensions, Examples).",
+        "status": "completed",
+        "priority": "high"
+      },
+      "3": {
+        "id": "3",
+        "content": "Implement core WebSocket server infrastructure",
+        "details": "Create WebSocketServerService, WebSocketConnectionManager, message routing system, and client lifecycle management with ASP.NET Core WebSocket support.",
+        "status": "completed",
+        "priority": "high"
+      },
+      "4": {
+        "id": "4",
+        "content": "Implement path-based multi-tenancy system",
+        "details": "Create PathManager, ServerClientFactory, and per-path persister/synchronizer management with dependency injection integration.",
+        "status": "completed",
+        "priority": "high"
+      },
+      "5": {
+        "id": "5",
+        "content": "Create message handling and routing",
+        "details": "Implement payload creation, message forwarding, client-to-client routing, and buffer management for connection states.",
+        "status": "completed",
+        "priority": "high"
+      },
+      "6": {
+        "id": "6",
+        "content": "Implement event system and statistics",
+        "details": "Create event listeners for path/client changes, statistics tracking, and monitoring capabilities with proper C# event patterns.",
+        "status": "completed",
+        "priority": "medium"
+      },
+      "7": {
+        "id": "7",
+        "content": "Create integration and configuration",
+        "details": "Add dependency injection extensions, configuration options, and examples for integrating with existing persister implementations.",
+        "status": "completed",
+        "priority": "medium"
+      },
+      "8": {
+        "id": "8",
+        "content": "Create comprehensive documentation",
+        "details": "Generate README, implementation guide, API reference, and example usage documentation with comparison to TypeScript version.",
+        "status": "completed",
+        "priority": "medium"
+      }
+    }
+  }
+}
